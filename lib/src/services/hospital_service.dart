@@ -12,7 +12,6 @@ import '../model/pharmacy.dart';
 class HospitalService {
   HospitalService() {
     Timer.periodic(Duration(seconds: 3), (Timer t) {
-      print(t.tick);
       _getHospitals();
       _getPharmacies();
     });
