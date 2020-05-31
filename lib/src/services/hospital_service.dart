@@ -211,7 +211,7 @@ class HospitalService {
 
   final passwordTransformer = StreamTransformer<String, String>.fromHandlers(
     handleData: (password, sink) {
-      if (password.trim().length <= 6) {
+      if (password.trim().length < 6 && !(password.trim().length > 6)) {
         sink.add(password.trim());
       } else {
         sink.addError('الباسوورد مفروض تتكون  6 أقل شئ');

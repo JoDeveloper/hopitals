@@ -4,7 +4,5 @@ import 'src/app.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
-  runApp(
-    HospitalApp(),
-  );
+  runApp(HospitalApp());
 }
