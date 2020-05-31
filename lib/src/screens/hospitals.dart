@@ -24,15 +24,20 @@ class Hospitals extends StatelessWidget {
                     Hospital hospital = snapshot.data[index];
                     return GestureDetector(
                       onTap: () => AppAlerts.showAlertDialog(
-                          context: context,
-                          title: hospital.name,
-                          message: hospital.details),
+                        context: context,
+                        title: hospital.name,
+                        message:
+                            '${hospital.details} \n ${hospital.phone ?? ''}',
+                      ),
                       child: ListTile(
                         leading: Image.asset(
                           'assets/hospital-icon.png',
                           fit: BoxFit.fill,
                         ),
-                        subtitle: Text(hospital.phone),
+                        subtitle: Text(
+                          hospital.phone ?? '',
+                          style: TextStyle(fontSize: 10),
+                        ),
                         trailing: Text(
                           hospital.name,
                           style: TextStyle(fontSize: 15),

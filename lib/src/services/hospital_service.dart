@@ -90,8 +90,9 @@ class HospitalService {
         'password': _password.value,
       });
       if (response.statusCode == 200) {
-        var parsedjson = convert.jsonDecode(response.body);
-        print(parsedjson['user']);
+        // var parsedjson = convert.jsonDecode(response.body);
+        SharedPreferences _prefs = await SharedPreferences.getInstance();
+        _prefs.setBool('isloggedIn', true);
         inPhone('');
         loggedIn = true;
       }
@@ -113,7 +114,6 @@ class HospitalService {
       });
       var parsedjson = convert.jsonDecode(response.body);
       if (response.statusCode == 200) {
-        print(parsedjson['user']);
         SharedPreferences _prefs = await SharedPreferences.getInstance();
         _prefs.setBool('isloggedIn', true);
         loggedIn = true;
@@ -136,7 +136,7 @@ class HospitalService {
     _loading.sink.add(true);
     try {
       http.Response response = await http.post('$url/hospitals', body: {
-        'phone': _phone.value ?? 'none',
+        'phone': _phone.value ?? '',
         'city': _city.value,
         'name': _hospitalName.value,
         'details': _details.value,
@@ -163,7 +163,7 @@ class HospitalService {
     _loading.sink.add(true);
     try {
       http.Response response = await http.post('$url/pharmacy', body: {
-        'phone': _phone.value ?? 'none',
+        'phone': _phone.value ?? '',
         'city': _city.value,
         'name': _hospitalName.value,
         'drugName': _drugName.value,
@@ -211,7 +211,7 @@ class HospitalService {
 
   final passwordTransformer = StreamTransformer<String, String>.fromHandlers(
     handleData: (password, sink) {
-      if (password.trim().length < 6 && !(password.trim().length > 6)) {
+      if (password.trim().length < 7 && !(password.trim().length > 6)) {
         sink.add(password.trim());
       } else {
         sink.addError('الباسوورد مفروض تتكون  6 أقل شئ');

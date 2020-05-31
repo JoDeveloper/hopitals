@@ -18,7 +18,7 @@ class Profile extends StatefulWidget {
 
 class _ProfileState extends State<Profile> {
   StreamSubscription _errorSubscription;
-  bool isLoggedIn;
+  bool isLoggedIn = false;
   bool showLogin = true;
   @override
   void initState() {
@@ -63,7 +63,7 @@ class _ProfileState extends State<Profile> {
   }
 
   Widget _logInWidget(BuildContext context, HospitalService hospital) {
-    return (showLogin == true)
+    return (showLogin == false)
         ? Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -178,7 +178,11 @@ class _ProfileState extends State<Profile> {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
           SizedBox(
-            height: 55,
+            height: 25,
+          ),
+          Image.asset('assets/hospital.gif'),
+          SizedBox(
+            height: 15,
           ),
           GestureDetector(
               child: Image.asset('assets/hospital.png'),
@@ -233,7 +237,7 @@ class _ProfileState extends State<Profile> {
       children: <Widget>[
         SizedBox(height: MediaQuery.of(context).size.height / 4),
         Text(
-          'تسجيل',
+          'تسجيل الدخول',
           style: TextStyle(fontSize: 25),
         ),
         const SizedBox(height: 25),
@@ -263,46 +267,44 @@ class _ProfileState extends State<Profile> {
         ),
         const SizedBox(height: 25),
         StreamBuilder<bool>(
-            stream: hospital.$loading,
-            builder: (context, snapshot) {
-              if (snapshot.hasData && snapshot.data == false)
-                return RaisedButton(
-                  onPressed: () => hospital.login().then((value) {
-                    if (value) {
-                      setState(() {
-                        isLoggedIn = true;
-                      });
-                    }
-                  }),
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Text(
-                      'تسجيل الدخول',
-                      style: TextStyle(fontSize: 18),
-                    ),
+          stream: hospital.$loading,
+          builder: (context, snapshot) {
+            if (snapshot.hasData && snapshot.data == false)
+              return RaisedButton(
+                onPressed: () => hospital.login().then((value) {
+                  if (value) {
+                    setState(() {
+                      isLoggedIn = true;
+                    });
+                  }
+                }),
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(
+                    'تسجيل الدخول',
+                    style: TextStyle(fontSize: 18),
                   ),
-                  elevation: 5,
-                  splashColor: Colors.blueGrey,
-                );
-              return CircularProgressIndicator();
-            }),
+                ),
+                elevation: 5,
+                splashColor: Colors.blueGrey,
+              );
+            return CircularProgressIndicator();
+          },
+        ),
+        const SizedBox(height: 25),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
             UrlButton(
-              title: 'تسجيل',
-              onTap: () {
-                setState(() {
-                  showLogin = true;
-                });
-              },
+              title: 'أفتح حساب',
+              onTap: () => setState(() => this.showLogin = false),
             ),
             const SizedBox(
               width: 30,
             ),
             Text(
-              'لديك حساب',
+              'ليس لديك حساب',
               style: TextStyle(
                   fontFamily: GoogleFonts.cairo().fontFamily,
                   color: Colors.blueGrey),
