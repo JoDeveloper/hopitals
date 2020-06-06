@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 import '../services/hospital_service.dart';
 import '../widgets/alert.dart';
@@ -20,13 +19,14 @@ class _ProfileState extends State<Profile> {
   StreamSubscription _errorSubscription;
   bool isLoggedIn = false;
   bool showLogin = true;
+
   @override
   void initState() {
     super.initState();
     var hospital = Provider.of<HospitalService>(context, listen: false);
     _isLoggedIn();
     _errorSubscription = hospital.$error.listen((error) {
-      if (error != '') {
+      if (error != '' || error == null) {
         AppAlerts.showAlertDialog(
                 context: context, title: '😅  حدث خطأ', message: error)
             .then(
@@ -40,6 +40,7 @@ class _ProfileState extends State<Profile> {
   Widget build(BuildContext context) {
     var hospital = Provider.of<HospitalService>(context);
     return Scaffold(
+      backgroundColor: Color(0xffffffff),
       body: SingleChildScrollView(
         child: (isLoggedIn == true)
             ? _loggedInWidget(context, hospital)
@@ -99,7 +100,7 @@ class _ProfileState extends State<Profile> {
                   },
                 ),
                 StreamBuilder<String>(
-                  stream: hospital.$passowrd,
+                  stream: hospital.$password,
                   builder: (context, snapshot) {
                     return AppTextField(
                       hintText: 'كلمه السر',
@@ -180,9 +181,13 @@ class _ProfileState extends State<Profile> {
           SizedBox(
             height: 25,
           ),
-          Image.asset('assets/hospital.gif'),
+          Image.asset(
+            'assets/hospital.gif',
+            fit: BoxFit.fill,
+          ),
           SizedBox(
             height: 15,
+            child: Divider(),
           ),
           GestureDetector(
               child: Image.asset('assets/hospital.png'),
@@ -204,26 +209,6 @@ class _ProfileState extends State<Profile> {
             height: 35,
             child: Divider(),
           ),
-          Center(
-              child: Container(
-            margin: const EdgeInsets.only(top: 5.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                Text("Built with   💜"),
-                Text(" By"),
-                InkWell(
-                  child: Text(
-                    "  Joseph ",
-                    style: TextStyle(
-                      color: Colors.lightBlue,
-                    ),
-                  ),
-                  onTap: _launchURL,
-                ),
-              ],
-            ),
-          )),
         ],
       ),
     );
@@ -254,7 +239,7 @@ class _ProfileState extends State<Profile> {
           },
         ),
         StreamBuilder<String>(
-          stream: hospital.$passowrd,
+          stream: hospital.$password,
           builder: (context, snapshot) {
             return AppTextField(
               hintText: 'كلمه السر',
@@ -316,11 +301,11 @@ class _ProfileState extends State<Profile> {
   }
 }
 
-void _launchURL() async {
-  const url = 'fb://profile/jodeveloper8';
-  if (await canLaunch(url)) {
-    await launch(url);
-  } else {
-    print('Could not launch $url');
-  }
-}
+//void _launchURL() async {
+//  const url = 'fb://profile/jodeveloper8';
+//  if (await canLaunch(url)) {
+//    await launch(url);
+//  } else {
+//    print('Could not launch $url');
+//  }
+//}

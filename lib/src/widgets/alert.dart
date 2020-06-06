@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 abstract class AppAlerts {
   static Future<void> showAlertDialog(
-      {BuildContext context, String message, String title}) async {
+      {BuildContext context, String message, String title,Widget body}) async {
     return showDialog(
         context: context,
         barrierDismissible: false,

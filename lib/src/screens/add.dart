@@ -1,3 +1,6 @@
+import 'dart:async';
+
+import 'package:around_hospital/src/widgets/alert.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -8,11 +11,35 @@ class AddHospital extends StatefulWidget {
   final int type;
 
   const AddHospital({Key key, this.type}) : super(key: key);
+
   @override
   _AddHospitalState createState() => _AddHospitalState();
 }
 
 class _AddHospitalState extends State<AddHospital> {
+  StreamSubscription _errorSubscription;
+
+  void initState() {
+    super.initState();
+    var hospital = Provider.of<HospitalService>(context, listen: false);
+
+    _errorSubscription = hospital.$error.listen((error) {
+      if (error != '' || error == null) {
+        AppAlerts.showAlertDialog(
+                context: context, title: '🤨🤨', message: error)
+            .then(
+          (_) => hospital.clearErrorMessage(),
+        );
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _errorSubscription.cancel();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     String title = (widget.type == 1) ? 'إضافة مستشفى' : 'إضافة دواء';
@@ -99,7 +126,7 @@ class _AddHospitalState extends State<AddHospital> {
                       return RaisedButton(
                         onPressed: () {
                           if (widget.type == 1) {
-                            hospital.addhospital().then((value) {
+                            hospital.addHospital().then((value) {
                               if (value) Navigator.of(context).pop();
                             });
                           } else {
